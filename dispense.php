@@ -1,26 +1,90 @@
 <?php include 'db.php'; 
      include 'header.php';?>
-    
 
-<h2>Dispense Medicine</h2>
+<style>
+body{
+    font-family: Arial;
+    background: #f4f6f9;
+}
 
-<form method="POST">
-    Medicine:
-    <select name="id" required>
-        <?php
-        $r = $conn->query("SELECT * FROM medicines");
-        while($row = $r->fetch_assoc()){
-            echo "<option value='{$row['id']}'>
-                    {$row['name']} ({$row['label']}) - Stock: {$row['quantity']}
-                  </option>";
-        }
-        ?>
-    </select><br><br>
+.container{
+    width: 420px;
+    margin: 50px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
 
-    Quantity: <input type="number" name="qty" required><br><br>
+h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-    <button name="use">Use</button>
-</form>
+select, input{
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button{
+    width: 100%;
+    padding: 10px;
+    background: #34495e;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover{
+    background: #0056b3;
+}
+
+.success{
+    background: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.error{
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    text-align: center;
+}
+</style>
+
+<div class="container">
+    <h2>Dispense Medicine</h2>
+
+    <form method="POST">
+        Medicine:
+        <select name="id" required>
+            <?php
+            $r = $conn->query("SELECT * FROM medicines");
+            while($row = $r->fetch_assoc()){
+                echo "<option value='{$row['id']}'>
+                        {$row['name']} ({$row['label']}) - Stock: {$row['quantity']}
+                      </option>";
+            }
+            ?>
+        </select>
+
+        Quantity:
+        <input type="number" name="qty" required min="1">
+
+        <button name="use">Dispense</button>
+    </form>
 
 <?php
 if(isset($_POST['use'])){
@@ -33,11 +97,12 @@ if(isset($_POST['use'])){
     if($row['quantity'] >= $q){
         $conn->query("UPDATE medicines SET quantity = quantity - $q WHERE id=$id");
         $conn->query("INSERT INTO logs(medicine_id,quantity,action)
-                      VALUES($id,$q,'Released   to patient')");
+                      VALUES($id,$q,'Released to patient')");
 
-        echo "✅ Successfully Release!";
+        echo "<div class='success'>✅ Successfully Released!</div>";
     } else {
-        echo "❌ Not enough stock!";
+        echo "<div class='error'>❌ Not enough stock!</div>";
     }
 }
 ?>
+</div>
