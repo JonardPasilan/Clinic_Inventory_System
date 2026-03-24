@@ -6,13 +6,17 @@ include 'db.php';
 <div class="container">
 <h2>Medicine Inventory</h2>
 
+<!-- SEARCH -->
 <form method="GET">
-    <input type="text" name="search" placeholder="Search medicine...">
+    <input type="text" name="search" 
+    value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" 
+    placeholder="Search medicine...">
     <button type="submit">Search</button>
 </form>
 
 <br>
-<table>
+
+<table border="1" cellpadding="10">
 <tr>
     <th>Name</th>
     <th>Description</th>
@@ -25,11 +29,8 @@ include 'db.php';
 <?php
 $today = date("Y-m-d");
 
-
-
-
-
-if(isset($_GET['search'])){
+// SEARCH
+if(isset($_GET['search']) && $_GET['search'] != ''){
     $s = $_GET['search'];
     $r = $conn->query("SELECT * FROM medicines 
                        WHERE name LIKE '%$s%' 
@@ -38,17 +39,24 @@ if(isset($_GET['search'])){
     $r = $conn->query("SELECT * FROM medicines");
 }
 
-
-
-
-
+// CHECK DATA
 if($r && $r->num_rows > 0){
     while($row = $r->fetch_assoc()){
+
         $exp = $row['expiration_date'];
 
-        if($exp < $today){
-            $status = "<span style='color:red;'>EXPIRED</span>";
-        } else {
+        // STATUS (SHOW BOTH)
+        $status = "";
+
+        if(strtotime($exp) < strtotime($today)){
+            $status .= "<span style='color:red;'>EXPIRED</span> ";
+        }
+
+        if($row['quantity'] <= 5){
+            $status .= "<span style='color:orange;'>LOW STOCK</span>";
+        }
+
+        if($status == ""){
             $status = "<span style='color:green;'>OK</span>";
         }
 
@@ -59,15 +67,21 @@ if($r && $r->num_rows > 0){
             <td>{$exp}</td>
             <td>$status</td>
             <td>
-                <a href='edit.php?id={$row['id']}'>
+
+                <a href='edit.php?id=".$row['id']."'>
                     <button>Edit</button>
                 </a>
 
                 <form method='POST' action='delete.php' style='display:inline;' 
                       onsubmit=\"return confirm('Delete this item?');\">
-                    <input type='hidden' name='id' value='{$row['id']}'>
+                    <input type='hidden' name='id' value='".$row['id']."'>
                     <button type='submit' name='delete'>Delete</button>
                 </form>
+
+                <a href='add_stock.php?id=".$row['id']."'>
+                    <button>Add Stock</button>
+                </a>
+
             </td>
         </tr>";
     }
