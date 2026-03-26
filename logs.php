@@ -1,6 +1,11 @@
 <?php include 'db.php';
       include 'header.php'; ?>
 
+<div class="nav" style="background:#2c3e50; padding:10px; text-align:center;">
+    <a href="add.php" style="color:white; margin:10px;">Add Medicine</a>
+    <a href="dispense.php" style="color:white; margin:10px;">Dispense</a>
+    <a href="logs.php" style="color:white; margin:10px;">Logs</a>
+</div>
 <h2>Release History</h2>
 
 <table border="1">
@@ -10,6 +15,7 @@
     <th>Action</th>
     <th>Date</th>
 </tr>
+
 
 <?php
 $r = $conn->query("

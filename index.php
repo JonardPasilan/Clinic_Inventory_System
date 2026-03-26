@@ -1,5 +1,14 @@
 <?php 
 include 'header.php';
+?>
+
+<div class="nav" style="background:#2c3e50; padding:10px; text-align:center;">
+    <a href="add.php" style="color:white; margin:10px;">Add Medicine</a>
+    <a href="dispense.php" style="color:white; margin:10px;">Dispense</a>
+    <a href="logs.php" style="color:white; margin:10px;">Logs</a>
+</div>
+
+<?php
 include 'db.php';
 ?>
 
@@ -59,14 +68,15 @@ if($r && $r->num_rows > 0){
         if($status == ""){
             $status = "<span style='color:green;'>OK</span>";
         }
-
+       
+    
         echo "<tr>
-            <td>{$row['name']}</td>
-            <td>{$row['label']}</td>
-            <td>{$row['quantity']}</td>
-            <td>{$exp}</td>
-            <td>$status</td>
-            <td>
+                <td>{$row['name']}</td>
+                <td>{$row['label']}</td>
+                <td>{$row['quantity']}</td>
+                <td>{$exp}</td>
+                <td>$status</td>
+                <td>
 
                 <a href='edit.php?id=".$row['id']."'>
                     <button>Edit</button>
@@ -82,8 +92,8 @@ if($r && $r->num_rows > 0){
                     <button>Add Stock</button>
                 </a>
 
-            </td>
-        </tr>";
+                </td>
+             </tr>";
     }
 } else {
     echo "<tr><td colspan='6'>No data found</td></tr>";

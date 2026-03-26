@@ -64,6 +64,11 @@ button:hover{
 }
 </style>
 
+<div class="nav" style="background:#2c3e50; padding:10px; text-align:center;">
+    <a href="add.php" style="color:white; margin:10px;">Add Medicine</a>
+    <a href="dispense.php" style="color:white; margin:10px;">Dispense</a>
+    <a href="logs.php" style="color:white; margin:10px;">Logs</a>
+</div>
 <div class="container">
     <h2>Dispense Medicine</h2>
 

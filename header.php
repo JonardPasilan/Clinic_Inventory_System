@@ -1,58 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
 <style>
+
 body {
     font-family: Arial, sans-serif;
     background: #f4f6f9;
     margin: 0;
 }
 
-/* NAVBAR */
-.nav {
+/* TOP BAR */
+.topbar {
     background: #2c3e50;
+    color: white;
     padding: 15px;
-    text-align: center;
+    font-size: 20px;
 }
 
-.nav a {
+/* HAMBURGER */
+.menu-btn {
+    cursor: pointer;
+    font-size: 25px;
+    margin-right: 15px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    background: #34495e;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+}
+
+/* SIDEBAR LINKS */
+.sidebar a {
+    padding: 12px;
+    display: block;
     color: white;
-    margin: 10px;
     text-decoration: none;
     font-weight: bold;
 }
 
-.nav a:hover {
-    color: #1abc9c;
+.sidebar a:hover {
+    background: #1abc9c;
 }
 
-/* CONTAINER */
+/* CONTENT */
 .container {
     width: 90%;
     margin: 20px auto;
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
-
-/* TABLE */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th {
-    background: #34495e;
-    color: white;
-    padding: 10px;
-}
-
-td {
-    padding: 10px;
-    text-align: center;
-}
-
-tr:nth-child(even) {
-    background: #f2f2f2;
 }
 
 /* BUTTON */
@@ -62,24 +64,34 @@ button {
     background: #1abc9c;
     color: white;
     border-radius: 5px;
-    cursor: pointer;
 }
 
 button:hover {
     background: #16a085;
 }
 
-/* INPUT */
-input, select {
-    padding: 8px;
-    margin: 5px;
-    width: 200px;
-}
 </style>
+</head>
 
-<div class="nav">
-    <a href="index.php">Inventory</a>
-    <a href="add.php">Add Medicine</a>
-    <a href="dispense.php">Dispense Medicine</a>
-    <a href="logs.php">Logs</a>
+<body>
+
+<div class="topbar">
+    <span class="menu-btn" onclick="openMenu()">☰</span>
+    Clinic System
 </div>
+
+<div id="sidebar" class="sidebar">
+    <a href="index.php">Medicine Inventory</a>
+    <a href="employees.php">Employees</a>
+</div>
+
+<script>
+function openMenu() {
+    let s = document.getElementById("sidebar");
+    if(s.style.width === "200px"){
+        s.style.width = "0";
+    } else {
+        s.style.width = "200px";
+    }
+}
+</script>
