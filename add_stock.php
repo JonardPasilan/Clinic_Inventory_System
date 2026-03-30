@@ -220,6 +220,7 @@ if($r && $r->num_rows > 0){
         }
 
         input[type="number"] {
+            appearance: textfield;
             -moz-appearance: textfield;
         }
 

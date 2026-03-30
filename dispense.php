@@ -281,7 +281,8 @@ include 'header.php';
 
         /* Quantity Input Styling */
         input[type="number"] {
-            -moz-appearance: textfield;
+            appearance: textfield;
+           
         }
 
         input[type="number"]::-webkit-inner-spin-button,
