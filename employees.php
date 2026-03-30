@@ -47,23 +47,33 @@ if(isset($_GET['search']) && $_GET['search'] != ''){
 
 if($r && $r->num_rows > 0){
     while($row = $r->fetch_assoc()){
-        echo "<tr>
-            <td>{$row['name']}</td>
-            <td>{$row['age']}</td>
-            <td>{$row['sex']}</td>
-            <td>{$row['department']}</td>
+?>
+        <tr>
+            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['age']; ?></td>
+            <td><?php echo $row['sex']; ?></td>
+            <td><?php echo $row['department']; ?></td>
             <td>
 
-                <a href='edit_employee.php?id=".$row['id']."'>
+                <a href="edit_employee.php?id=<?php echo $row['id']; ?>">
                     <button>Edit</button>
                 </a>
 
-                <button type='button' onclick='confirmDelete(".$row['id'].")'>
+                <button type="button" onclick="confirmDelete(<?php echo $row['id']; ?>)">
                     Delete
                 </button>
 
+                <br><br>
+
+                <a href="health.php?id=<?php echo $row['id']; ?>">
+                    <button style="background:green;color:white;">
+                        Health
+                    </button>
+                </a>
+
             </td>
-        </tr>";
+        </tr>
+<?php
     }
 } else {
     echo "<tr><td colspan='5'>No data</td></tr>";
