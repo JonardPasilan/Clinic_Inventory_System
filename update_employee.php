@@ -24,6 +24,7 @@ if(isset($_POST['update'])){
         WHERE id=$id
     ");
 
-    header("Location: employees.php");
+    header("Location: health.php?mode=edit&id=" . intval($id));
+    exit();
 }
 ?>

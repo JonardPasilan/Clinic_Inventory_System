@@ -39,32 +39,35 @@ if($r && $r->num_rows > 0){
             min-height: 100vh;
         }
 
-        /* Navigation Bar */
         .nav {
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            padding: 15px 20px;
-            text-align: center;
+            padding: 8px 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 999;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 6px 10px;
         }
 
         .nav a {
             color: white;
-            margin: 0 15px;
             text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.2s ease, transform 0.2s ease;
             display: inline-block;
+            white-space: nowrap;
         }
 
         .nav a:hover {
             background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         /* Container */
@@ -361,18 +364,14 @@ if($r && $r->num_rows > 0){
 
         /* Responsive */
         @media (max-width: 768px) {
+            .nav { padding: 6px 8px; gap: 4px 6px; }
+            .nav a { font-size: 12px; padding: 5px 10px; }
             .container {
                 margin: 20px auto;
             }
             
             .form-card {
                 padding: 25px;
-            }
-            
-            .nav a {
-                margin: 0 5px;
-                padding: 8px 12px;
-                font-size: 14px;
             }
             
             .button-group {

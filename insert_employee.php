@@ -16,6 +16,8 @@ if(isset($_POST['save'])){
     VALUES 
     ('$n','$a','$s','$b','$ad','$c','$d','$cs')");
 
-    header("Location: employees.php");
+    $newId = intval($conn->insert_id);
+    header("Location: health.php?mode=edit&id=" . $newId);
+    exit();
 }
 ?>

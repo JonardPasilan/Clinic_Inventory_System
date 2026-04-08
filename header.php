@@ -9,12 +9,24 @@ body {
     margin: 0;
 }
 
+/* When sidebar is open, shift in-flow content so it is not covered by the fixed drawer */
+.topbar,
+.container {
+    transition: margin-left 0.3s ease;
+}
+body.sidebar-open .topbar,
+body.sidebar-open .container {
+    margin-left: 200px;
+}
+
 /* TOP BAR */
 .topbar {
     background: #2c3e50;
     color: white;
     padding: 15px;
     font-size: 20px;
+    position: relative;
+    z-index: 1001;
 }
 
 /* HAMBURGER */
@@ -29,10 +41,17 @@ body {
     height: 100%;
     width: 0;
     position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
     background: #34495e;
     overflow-x: hidden;
-    transition: 0.3s;
+    transition: width 0.3s ease;
     padding-top: 60px;
+    box-shadow: none;
+}
+.sidebar.open {
+    box-shadow: 4px 0 18px rgba(0, 0, 0, 0.18);
 }
 
 /* SIDEBAR LINKS */
@@ -87,11 +106,16 @@ button:hover {
 
 <script>
 function openMenu() {
-    let s = document.getElementById("sidebar");
-    if(s.style.width === "200px"){
+    var s = document.getElementById("sidebar");
+    var open = (s.style.width === "200px");
+    if (open) {
         s.style.width = "0";
+        s.classList.remove("open");
+        document.body.classList.remove("sidebar-open");
     } else {
         s.style.width = "200px";
+        s.classList.add("open");
+        document.body.classList.add("sidebar-open");
     }
 }
 </script>
