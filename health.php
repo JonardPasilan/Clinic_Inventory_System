@@ -144,6 +144,7 @@ $isAdd = $mode === 'add';
             border-radius: 8px;
             background: #fff;
             font-size: 14px;
+            box-sizing: border-box;
         }
         .field textarea {
             min-height: 92px;
@@ -230,8 +231,23 @@ $isAdd = $mode === 'add';
             padding: 8px 10px;
             border:1px solid #eef2f6;
             border-radius: 10px;
+            min-width:0;
         }
-        .check input { margin-top: 3px; }
+        .check input[type="checkbox"] { 
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        .check > div {
+            min-width:0;
+            flex:1;
+        }
+        .check > div input[type="text"] {
+            width:100%;
+            box-sizing:border-box;
+        }
+        .check > span {
+            word-break: break-word;
+        }
         .muted {
             color:#7f8c8d;
             font-size: 12px;
@@ -376,9 +392,9 @@ $isAdd = $mode === 'add';
 
                 <div class="check">
                     <input type="checkbox" name="past_food_allergy" value="1" <?php echo !empty($pastMedical['food_allergy']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Food</span>
-                        <input style="margin-top:6px;" type="text" name="food_allergy_specify" value="<?php echo h($pastMedical['food_allergy_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Food</div>
+                        <input type="text" name="food_allergy_specify" value="<?php echo h($pastMedical['food_allergy_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
 
@@ -389,9 +405,9 @@ $isAdd = $mode === 'add';
 
                 <div class="check">
                     <input type="checkbox" name="past_epilepsy_seizure_disorder" value="1" <?php echo !empty($pastMedical['epilepsy_seizure_disorder']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Epilepsy/Seizure Disorder</span>
-                        <input style="margin-top:6px;" type="text" name="epilepsy_specify" value="<?php echo h($pastMedical['epilepsy_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Epilepsy/Seizure Disorder</div>
+                        <input type="text" name="epilepsy_specify" value="<?php echo h($pastMedical['epilepsy_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
 
@@ -412,9 +428,9 @@ $isAdd = $mode === 'add';
 
                 <div class="check">
                     <input type="checkbox" name="past_skin_disorder" value="1" <?php echo !empty($pastMedical['skin_disorder']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Skin Disorder</span>
-                        <input style="margin-top:6px;" type="text" name="skin_disorder_specify" value="<?php echo h($pastMedical['skin_disorder_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Skin Disorder</div>
+                        <input type="text" name="skin_disorder_specify" value="<?php echo h($pastMedical['skin_disorder_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
 
@@ -435,9 +451,9 @@ $isAdd = $mode === 'add';
 
                 <div class="check">
                     <input type="checkbox" name="past_tuberculosis" value="1" <?php echo !empty($pastMedical['tuberculosis']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Tuberculosis</span>
-                        <input style="margin-top:6px;" type="text" name="tuberculosis_specify" value="<?php echo h($pastMedical['tuberculosis_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Tuberculosis</div>
+                        <input type="text" name="tuberculosis_specify" value="<?php echo h($pastMedical['tuberculosis_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
 
@@ -455,25 +471,25 @@ $isAdd = $mode === 'add';
 
                 <div class="check">
                     <input type="checkbox" name="past_hepatitis" value="1" <?php echo !empty($pastMedical['hepatitis']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Hepatitis</span>
-                        <input style="margin-top:6px;" type="text" name="hepatitis_specify" value="<?php echo h($pastMedical['hepatitis_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Hepatitis</div>
+                        <input type="text" name="hepatitis_specify" value="<?php echo h($pastMedical['hepatitis_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
 
                 <div class="check">
                     <input type="checkbox" name="past_hypertension_elevated_bp" value="1" <?php echo !empty($pastMedical['hypertension_elevated_bp']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Hypertension/Elevated BP</span>
-                        <input style="margin-top:6px;" type="text" name="hypertension_specify" value="<?php echo h($pastMedical['hypertension_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Hypertension/Elevated BP</div>
+                        <input type="text" name="hypertension_specify" value="<?php echo h($pastMedical['hypertension_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
 
                 <div class="check">
                     <input type="checkbox" name="past_psychological_disorder" value="1" <?php echo !empty($pastMedical['psychological_disorder']) ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
-                    <div style="flex:1;">
-                        <span style="font-weight:800;color:#2c3e50;">Psychological Disorder</span>
-                        <input style="margin-top:6px;" type="text" name="psychological_disorder_specify" value="<?php echo h($pastMedical['psychological_disorder_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <div>
+                        <div style="font-weight:800;color:#2c3e50;margin-bottom:6px;">Psychological Disorder</div>
+                        <input type="text" name="psychological_disorder_specify" value="<?php echo h($pastMedical['psychological_disorder_specify'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                     </div>
                 </div>
             </div>
