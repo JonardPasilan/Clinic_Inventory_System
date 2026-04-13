@@ -330,19 +330,40 @@ include 'header.php';
 
         <?php
         if(isset($_POST['use'])){
-            $id = mysqli_real_escape_string($conn, $_POST['id']);
-            $q = mysqli_real_escape_string($conn, $_POST['qty']);
+            $id = intval($_POST['id'] ?? 0);
+            $q = intval($_POST['qty'] ?? 0);
             
-            // Get medicine details
-            $r = $conn->query("SELECT name, label, quantity FROM medicines WHERE id=$id");
-            $row = $r->fetch_assoc();
+            // Get medicine details (include expiration for server-side rule)
+            $r = $id > 0 ? $conn->query("SELECT name, label, quantity, expiration_date FROM medicines WHERE id=$id") : false;
+            $row = ($r && $r->num_rows > 0) ? $r->fetch_assoc() : null;
+
+            if(!$row){
+                echo "<div class='alert alert-error' id='alertMessage'>
+                        <span>❌</span>
+                        <div>
+                            <strong>Medicine not found</strong><br>
+                            The selected medicine is missing or was removed.
+                        </div>
+                        <span class='close' onclick='this.parentElement.style.display=\"none\"'>&times;</span>
+                      </div>";
+            } else {
             $medicine_name = $row['name'] . " (" . $row['label'] . ")";
-            $current_stock = $row['quantity'];
-            
-            if($current_stock >= $q && $q > 0){
+            $current_stock = (int)$row['quantity'];
+            $today = date('Y-m-d');
+            $is_expired = !empty($row['expiration_date']) && strtotime($row['expiration_date']) < strtotime($today);
+
+            if($is_expired){
+                echo "<div class='alert alert-error' id='alertMessage'>
+                        <span>❌</span>
+                        <div>
+                            <strong>Cannot dispense expired medicine</strong><br>
+                            {$medicine_name} is past its expiration date.
+                        </div>
+                        <span class='close' onclick='this.parentElement.style.display=\"none\"'>&times;</span>
+                      </div>";
+            } elseif($current_stock >= $q && $q > 0){
                 $conn->query("UPDATE medicines SET quantity = quantity - $q WHERE id=$id");
-                $conn->query("INSERT INTO logs(medicine_id, quantity, action, created_at)
-                              VALUES($id, $q, 'Released to patient', NOW())");
+                $conn->query("INSERT INTO logs(medicine_id, quantity, action) VALUES($id, $q, 'Released to patient')");
                 
                 $new_stock = $current_stock - $q;
                 $stock_status = "";
@@ -392,6 +413,7 @@ include 'header.php';
                           </div>";
                 }
             }
+            }
         }
         ?>
 
@@ -413,8 +435,10 @@ include 'header.php';
                                 $stock_class = "style='color:#f39c12;'";
                                 $stock_warning = " (LOW STOCK)";
                             }
-                            echo "<option value='{$row['id']}' data-stock='{$row['quantity']}' data-name='{$row['name']}' data-label='{$row['label']}' {$stock_class}>
-                                    {$row['name']} ({$row['label']}) - Stock: {$row['quantity']} units{$stock_warning}
+                            $opt_name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+                            $opt_label = htmlspecialchars($row['label'], ENT_QUOTES, 'UTF-8');
+                            echo "<option value='{$row['id']}' data-stock='{$row['quantity']}' data-name='{$opt_name}' data-label='{$opt_label}' {$stock_class}>
+                                    {$opt_name} ({$opt_label}) - Stock: {$row['quantity']} units{$stock_warning}
                                   </option>";
                         }
                     } else {

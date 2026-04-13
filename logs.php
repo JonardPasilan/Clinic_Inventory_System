@@ -460,22 +460,20 @@ include 'header.php';
                       JOIN medicines ON logs.medicine_id = medicines.id 
                       WHERE 1=1";
             
-            // Apply filters
-            if(isset($_GET['filter'])){
-                if(isset($_GET['medicine_id']) && $_GET['medicine_id'] != ''){
-                    $med_id = mysqli_real_escape_string($conn, $_GET['medicine_id']);
-                    $query .= " AND logs.medicine_id = '$med_id'";
-                }
-                
-                if(isset($_GET['date_from']) && $_GET['date_from'] != ''){
-                    $date_from = mysqli_real_escape_string($conn, $_GET['date_from']);
-                    $query .= " AND DATE(logs.date) >= '$date_from'";
-                }
-                
-                if(isset($_GET['date_to']) && $_GET['date_to'] != ''){
-                    $date_to = mysqli_real_escape_string($conn, $_GET['date_to']);
-                    $query .= " AND DATE(logs.date) <= '$date_to'";
-                }
+            // Apply filters when parameters are present (works with bookmarks / shared URLs, not only "Apply Filter")
+            if(isset($_GET['medicine_id']) && $_GET['medicine_id'] != ''){
+                $med_id = mysqli_real_escape_string($conn, $_GET['medicine_id']);
+                $query .= " AND logs.medicine_id = '$med_id'";
+            }
+
+            if(isset($_GET['date_from']) && $_GET['date_from'] != ''){
+                $date_from = mysqli_real_escape_string($conn, $_GET['date_from']);
+                $query .= " AND DATE(logs.date) >= '$date_from'";
+            }
+
+            if(isset($_GET['date_to']) && $_GET['date_to'] != ''){
+                $date_to = mysqli_real_escape_string($conn, $_GET['date_to']);
+                $query .= " AND DATE(logs.date) <= '$date_to'";
             }
             
             $query .= " ORDER BY logs.id DESC";
@@ -494,11 +492,16 @@ include 'header.php';
                     if($quantity <= 0){
                         $quantity_class = 'quantity-out';
                     }
+
+                    $log_name = htmlspecialchars((string)$row['name'], ENT_QUOTES, 'UTF-8');
+                    $log_label = htmlspecialchars((string)$row['label'], ENT_QUOTES, 'UTF-8');
+                    $log_action = htmlspecialchars((string)$row['action'], ENT_QUOTES, 'UTF-8');
+                    $log_when = htmlspecialchars((string)$row['formatted_date'], ENT_QUOTES, 'UTF-8');
                     
                     echo "<tr>
                         <td>
-                            <div class='medicine-name'>{$row['name']}</div>
-                            <small style='color:#7f8c8d; font-size:11px;'>{$row['label']}</small>
+                            <div class='medicine-name'>{$log_name}</div>
+                            <small style='color:#7f8c8d; font-size:11px;'>{$log_label}</small>
                         </td>
                         <td>
                             <span class='quantity-badge {$quantity_class}'>
@@ -507,11 +510,11 @@ include 'header.php';
                         </td>
                         <td>
                             <span class='action-badge'>
-                                💊 {$row['action']}
+                                💊 {$log_action}
                             </span>
                         </td>
                         <td class='date-styling'>
-                            📅 {$row['formatted_date']}
+                            📅 {$log_when}
                         </td>
                     </tr>";
                 }

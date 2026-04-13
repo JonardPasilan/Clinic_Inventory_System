@@ -85,7 +85,7 @@ $immunizations = is_array($profile) ? ($profile['immunizations'] ?? []) : [];
 $hospital = is_array($profile) ? ($profile['hospital_admission'] ?? []) : [];
 $physical = is_array($profile) ? ($profile['physical_screening'] ?? []) : [];
 
-$empDisplay = $id > 0 ? str_pad((string)$id, 5, '0', STR_PAD_LEFT) :
+$empDisplay = $id > 0 ? str_pad((string)$id, 5, '0', STR_PAD_LEFT) : '';
 
 // In view mode, prevent editing by disabling inputs.
 $isView = $mode === 'view';
@@ -748,7 +748,21 @@ $isAdd = $mode === 'add';
             
             <?php
             $classification = is_array($profile) ? ($profile['classification'] ?? []) : [];
-            $finalClass = $classification['final'] ?? '';
+            $finalClass = (string)($classification['final'] ?? '');
+            if ($finalClass === '' && $id > 0 && $profileRow && !empty($profileRow['class_type'])) {
+                $ct = trim((string)$profileRow['class_type']);
+                if (preg_match('/Class\s*([ABC])/i', $ct, $m)) {
+                    $finalClass = strtoupper($m[1]);
+                } elseif (preg_match('/^[ABC]$/i', $ct)) {
+                    $finalClass = strtoupper($ct);
+                }
+            }
+            if ($finalClass === '' && !empty($medical['class_type'])) {
+                $ct = (string)$medical['class_type'];
+                if (preg_match('/Class\s*([ABC])/i', $ct, $m)) {
+                    $finalClass = strtoupper($m[1]);
+                }
+            }
             ?>
 
             <div style="margin-top:14px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid #e9ecef;">
@@ -1582,47 +1596,53 @@ $isAdd = $mode === 'add';
             <div class="section-title">VIII. PHYSICAL SCREENING</div>
             <p style="font-size:13px;color:#546e7a;margin-bottom:14px;">Please check(/) appropriate box or supply needed information.</p>
             
+            <?php
+            $va8 = (string)($physical['visual_acuity_type'] ?? $profile['visual_acuity_type'] ?? '');
+            $ish8 = (string)($physical['ishihara_color_vision'] ?? $profile['ishihara_color_vision'] ?? '');
+            $had8 = (string)($physical['hearing_ad'] ?? $profile['hearing_ad'] ?? '');
+            $sp8 = (string)($physical['speech'] ?? $profile['speech'] ?? '');
+            ?>
             <div class="form-row">
                 <div class="field">
                     <label>Height (cm)</label>
-                    <input type="text" name="screening_height" value="<?php echo h($profile['screening_height'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_height" value="<?php echo h((string)($profile['screening_height'] ?? $physical['height_cm'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
                 <div class="field">
                     <label>Weight (kg)</label>
-                    <input type="text" name="screening_weight" value="<?php echo h($profile['screening_weight'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_weight" value="<?php echo h((string)($profile['screening_weight'] ?? $physical['weight_kg'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
             <div class="form-row" style="margin-top:14px;">
                 <div class="field">
                     <label>Blood Pressure</label>
-                    <input type="text" name="screening_blood_pressure" value="<?php echo h($profile['screening_blood_pressure'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_blood_pressure" value="<?php echo h((string)($profile['screening_blood_pressure'] ?? $physical['blood_pressure'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
                 <div class="field">
                     <label>Pulse Rate</label>
-                    <input type="text" name="screening_pulse_rate" value="<?php echo h($profile['screening_pulse_rate'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_pulse_rate" value="<?php echo h((string)($profile['screening_pulse_rate'] ?? $physical['pulse_rate'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
             <div class="form-row" style="margin-top:14px;">
                 <div class="field">
                     <label>Respiration</label>
-                    <input type="text" name="screening_respiration" value="<?php echo h($profile['screening_respiration'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_respiration" value="<?php echo h((string)($profile['screening_respiration'] ?? $physical['respiration'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
                 <div class="field">
                     <label>SpO2</label>
-                    <input type="text" name="screening_spo2" value="<?php echo h($profile['screening_spo2'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_spo2" value="<?php echo h((string)($profile['screening_spo2'] ?? $physical['spo2'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
             <div class="form-row" style="margin-top:14px;">
                 <div class="field">
                     <label>BMI</label>
-                    <input type="text" name="screening_bmi" value="<?php echo h($profile['screening_bmi'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_bmi" value="<?php echo h((string)($profile['screening_bmi'] ?? $physical['bmi'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
                 <div class="field">
                     <label>BMI Class</label>
-                    <input type="text" name="screening_bmi_class" value="<?php echo h($profile['screening_bmi_class'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="screening_bmi_class" value="<?php echo h((string)($profile['screening_bmi_class'] ?? $physical['bmi_class'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
@@ -1632,11 +1652,11 @@ $isAdd = $mode === 'add';
                     <label>Visual Acuity Type</label>
                     <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="visual_acuity_type" value="Corrected" <?php echo (($profile['visual_acuity_type'] ?? '') === 'Corrected') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="visual_acuity_type" value="Corrected" <?php echo ($va8 === 'Corrected') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Corrected</span>
                         </label>
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="visual_acuity_type" value="Uncorrected" <?php echo (($profile['visual_acuity_type'] ?? '') === 'Uncorrected') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="visual_acuity_type" value="Uncorrected" <?php echo ($va8 === 'Uncorrected') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Uncorrected</span>
                         </label>
                     </div>
@@ -1646,11 +1666,11 @@ $isAdd = $mode === 'add';
             <div class="form-row" style="margin-top:14px;">
                 <div class="field">
                     <label>Right Vision (OD)</label>
-                    <input type="text" name="right_vision_od" value="<?php echo h($profile['right_vision_od'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="right_vision_od" value="<?php echo h((string)($profile['right_vision_od'] ?? $physical['right_vision_od'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
                 <div class="field">
                     <label>Left Vision (OS)</label>
-                    <input type="text" name="left_vision_os" value="<?php echo h($profile['left_vision_os'] ?? ''); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
+                    <input type="text" name="left_vision_os" value="<?php echo h((string)($profile['left_vision_os'] ?? $physical['left_vision_os'] ?? '')); ?>" <?php echo $isView ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
@@ -1659,11 +1679,11 @@ $isAdd = $mode === 'add';
                     <label>Ishihara Color Vision</label>
                     <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="ishihara_color_vision" value="Adequate" <?php echo (($profile['ishihara_color_vision'] ?? '') === 'Adequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="ishihara_color_vision" value="Adequate" <?php echo ($ish8 === 'Adequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Adequate</span>
                         </label>
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="ishihara_color_vision" value="Defective" <?php echo (($profile['ishihara_color_vision'] ?? '') === 'Defective') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="ishihara_color_vision" value="Defective" <?php echo ($ish8 === 'Defective') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Defective</span>
                         </label>
                     </div>
@@ -1676,11 +1696,11 @@ $isAdd = $mode === 'add';
                     <label>AD (Right Ear)</label>
                     <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="hearing_ad" value="Adequate" <?php echo (($profile['hearing_ad'] ?? '') === 'Adequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="hearing_ad" value="Adequate" <?php echo ($had8 === 'Adequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Adequate</span>
                         </label>
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="hearing_ad" value="Inadequate" <?php echo (($profile['hearing_ad'] ?? '') === 'Inadequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="hearing_ad" value="Inadequate" <?php echo ($had8 === 'Inadequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Inadequate</span>
                         </label>
                     </div>
@@ -1689,11 +1709,11 @@ $isAdd = $mode === 'add';
                     <label>AS (Left Ear)</label>
                     <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="hearing_as" value="Adequate" <?php echo (($profile['hearing_as'] ?? '') === 'Adequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="hearing_as" value="Adequate" <?php echo (($profile['hearing_as'] ?? $physical['hearing_as'] ?? '') === 'Adequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Adequate</span>
                         </label>
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="hearing_as" value="Inadequate" <?php echo (($profile['hearing_as'] ?? '') === 'Inadequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="hearing_as" value="Inadequate" <?php echo (($profile['hearing_as'] ?? $physical['hearing_as'] ?? '') === 'Inadequate') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Inadequate</span>
                         </label>
                     </div>
@@ -1705,11 +1725,11 @@ $isAdd = $mode === 'add';
                     <label>Speech</label>
                     <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="speech" value="Clear" <?php echo (($profile['speech'] ?? '') === 'Clear') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="speech" value="Clear" <?php echo ($sp8 === 'Clear') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Clear</span>
                         </label>
                         <label style="display:flex;align-items:center;gap:5px;margin:0;">
-                            <input type="radio" name="speech" value="Unclear" <?php echo (($profile['speech'] ?? '') === 'Unclear') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
+                            <input type="radio" name="speech" value="Unclear" <?php echo ($sp8 === 'Unclear') ? 'checked' : ''; ?> <?php echo $isView ? 'disabled' : ''; ?>>
                             <span>Unclear</span>
                         </label>
                     </div>
@@ -1743,19 +1763,17 @@ $isAdd = $mode === 'add';
         const nextBtn = document.getElementById('nextBtn');
         const saveBtn = document.getElementById('saveBtn');
 
-        let currentStep = 1;
-        function setStep(step) {
-            currentStep = step;
-            pages.forEach(p => {
-                const stepNum = parseInt(p.getAttribute('data-step'), 10);
-                p.classList.toggle('active', stepNum === step);
-            });
+        let pageIndex = 0;
+        function showPageByIndex(idx) {
+            pageIndex = Math.max(0, Math.min(idx, pages.length - 1));
+            pages.forEach((p, i) => p.classList.toggle('active', i === pageIndex));
+            const stepNum = parseInt(pages[pageIndex].getAttribute('data-step'), 10) || 1;
             pills.forEach(pi => {
                 const n = parseInt(pi.getAttribute('data-step-ind'), 10);
-                pi.classList.toggle('active', n === step);
+                pi.classList.toggle('active', n === stepNum);
             });
-            prevBtn.style.visibility = step === 1 ? 'hidden' : 'visible';
-            if (step === pages.length) {
+            prevBtn.style.visibility = pageIndex === 0 ? 'hidden' : 'visible';
+            if (pageIndex === pages.length - 1) {
                 nextBtn.style.display = 'none';
                 if (saveBtn) saveBtn.style.display = 'inline-block';
             } else {
@@ -1765,14 +1783,20 @@ $isAdd = $mode === 'add';
         }
 
         prevBtn.addEventListener('click', function () {
-            if (currentStep > 1) setStep(currentStep - 1);
+            if (pageIndex > 0) showPageByIndex(pageIndex - 1);
         });
         nextBtn.addEventListener('click', function () {
-            if (currentStep < pages.length) setStep(currentStep + 1);
+            if (pageIndex < pages.length - 1) showPageByIndex(pageIndex + 1);
+        });
+        pills.forEach(pi => {
+            pi.addEventListener('click', function () {
+                const target = parseInt(pi.getAttribute('data-step-ind'), 10);
+                const i = pages.findIndex(p => parseInt(p.getAttribute('data-step'), 10) === target);
+                if (i !== -1) showPageByIndex(i);
+            });
         });
 
-        // Initial step
-        setStep(1);
+        showPageByIndex(0);
 
         // If view mode, disable form controls (so it matches screenshot intent).
         if (isView) {

@@ -2,20 +2,23 @@
 include 'db.php';
 
 if(isset($_POST['update'])){
-    $id = $_POST['id'];
-    $n = $_POST['name'];
-    $l = $_POST['label'];
-    $q = $_POST['quantity'];
-    $e = $_POST['exp'];
+    $id = intval($_POST['id'] ?? 0);
+    $n = $conn->real_escape_string((string)($_POST['name'] ?? ''));
+    $l = $conn->real_escape_string((string)($_POST['label'] ?? ''));
+    $q = intval($_POST['quantity'] ?? 0);
+    $e = $conn->real_escape_string((string)($_POST['exp'] ?? ''));
 
-    $conn->query("UPDATE medicines SET 
-        name='$n',
-        label='$l',
-        quantity='$q',
-        expiration_date='$e'
-        WHERE id=$id
-    ");
+    if($id > 0){
+        $conn->query("UPDATE medicines SET 
+            name='$n',
+            label='$l',
+            quantity='$q',
+            expiration_date='$e'
+            WHERE id=$id
+        ");
+    }
 
     header("Location: index.php");
+    exit();
 }
 ?>

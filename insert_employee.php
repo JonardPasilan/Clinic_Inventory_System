@@ -2,19 +2,19 @@
 include 'db.php';
 
 if(isset($_POST['save'])){
-    $n = $_POST['name'];
-    $a = $_POST['age'];
-    $s = $_POST['sex'];
-    $b = $_POST['birthday'];
-    $ad = $_POST['address'];
-    $c = $_POST['contact'];
-    $d = $_POST['department'];
-    $cs = $_POST['civil_status'];
+    $n = (string)($_POST['name'] ?? '');
+    $a = intval($_POST['age'] ?? 0);
+    $s = (string)($_POST['sex'] ?? '');
+    $b = (string)($_POST['birthday'] ?? '');
+    $ad = (string)($_POST['address'] ?? '');
+    $c = (string)($_POST['contact'] ?? '');
+    $d = (string)($_POST['department'] ?? '');
+    $cs = (string)($_POST['civil_status'] ?? '');
 
-    $conn->query("INSERT INTO employees 
-    (name, age, sex, birthday, address, contact, department, civil_status) 
-    VALUES 
-    ('$n','$a','$s','$b','$ad','$c','$d','$cs')");
+    $stmt = $conn->prepare("INSERT INTO employees (name, age, sex, birthday, address, contact, department, civil_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sissssss", $n, $a, $s, $b, $ad, $c, $d, $cs);
+    $stmt->execute();
+    $stmt->close();
 
     $newId = intval($conn->insert_id);
     header("Location: health.php?mode=edit&id=" . $newId);

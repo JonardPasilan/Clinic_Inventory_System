@@ -319,11 +319,12 @@ include 'header.php';
                     if(!$is_expired && !$is_low_stock) $status = "<span class='status-ok'>✓ OK</span>";
 
                     $row_class = $is_expired ? "style='background:#fff5f5;'" : "";
-                    $safe_name = htmlspecialchars($row['name'], ENT_QUOTES);
+                    $cell_name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+                    $cell_label = htmlspecialchars((string)$row['label'], ENT_QUOTES, 'UTF-8');
 
                     echo "<tr $row_class>
-                        <td><strong>{$row['name']}</strong></td>
-                        <td>{$row['label']}</td>
+                        <td><strong>{$cell_name}</strong></td>
+                        <td>{$cell_label}</td>
                         <td>
                             <strong style='color:" . ($quantity <= 5 ? '#e67e22' : '#2c3e50') . ";'>
                                 {$quantity}
@@ -334,7 +335,7 @@ include 'header.php';
                         <td class='action-buttons'>
                             <a href='edit.php?id={$row['id']}' class='btn btn-edit'>✏️ Edit</a>
                             <button type='button' class='btn btn-delete'
-                                onclick=\"openModal({$row['id']}, '{$safe_name}')\">
+                                onclick=\"openModal({$row['id']}, '{$cell_name}')\">
                                 🗑️ Delete
                             </button>
                             <a href='add_stock.php?id={$row['id']}' class='btn btn-stock'>➕ Add Stock</a>

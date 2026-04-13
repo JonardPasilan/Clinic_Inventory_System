@@ -2,10 +2,9 @@
 include 'db.php';
 
 if(isset($_POST['delete'])){
-    $id = $_POST['id'];
+    $id = intval($_POST['id'] ?? 0);
 
-    // check muna kung may ID
-    if(!empty($id)){
+    if($id > 0){
         $conn->query("DELETE FROM medicines WHERE id=$id");
     }
 }
