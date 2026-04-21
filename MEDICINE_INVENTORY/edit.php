@@ -34,12 +34,12 @@ $row = $r->fetch_assoc();
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f4f6f9;
             min-height: 100vh;
         }
 
         .nav {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: #2c3e50;
             padding: 8px 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
@@ -119,7 +119,7 @@ $row = $r->fetch_assoc();
 
         /* Medicine Preview */
         .medicine-preview {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            background: #eef2f7;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 25px;

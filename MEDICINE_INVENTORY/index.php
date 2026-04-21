@@ -13,12 +13,12 @@ require_once __DIR__ . '/header.php';
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f4f6f9;
             min-height: 100vh;
         }
 
         .nav {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: #2c3e50;
             padding: 8px 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
@@ -93,7 +93,7 @@ require_once __DIR__ . '/header.php';
 
         .search-form button {
             padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%,rgb(25, 2, 107) 100%);
+            background: #1f4f87;
             color: white;
             border: none;
             border-radius: 8px;
@@ -105,7 +105,7 @@ require_once __DIR__ . '/header.php';
 
         .search-form button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+            box-shadow: 0 4px 12px rgba(31,79,135,0.4);
         }
 
         .table-container {
@@ -118,7 +118,7 @@ require_once __DIR__ . '/header.php';
         table { width: 100%; border-collapse: collapse; }
 
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1f4f87;
             color: white;
             padding: 15px;
             text-align: left;
