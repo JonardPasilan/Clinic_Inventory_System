@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+require_once __DIR__ . '/db.php';
 
 if(isset($_POST['add'])){
     $id = intval($_POST['id'] ?? 0);

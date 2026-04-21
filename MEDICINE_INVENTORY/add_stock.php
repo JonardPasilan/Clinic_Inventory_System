@@ -1,6 +1,6 @@
 <?php
-include 'db.php';
-include 'header.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/header.php';
 
 // Check if ID is provided
 if(!isset($_GET['id']) || empty($_GET['id'])) {

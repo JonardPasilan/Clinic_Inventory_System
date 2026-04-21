@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+require_once __DIR__ . '/db.php';
 
 if(isset($_POST['delete'])){
     $id = intval($_POST['id']);

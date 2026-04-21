@@ -101,7 +101,7 @@ button:hover {
 
 <div id="sidebar" class="sidebar">
     <a href="index.php">Medicine Inventory</a>
-    <a href="employees.php">Employees</a>
+    <a href="../EMPLOYEE/employees.php">Employees</a>
 </div>
 
 <script>

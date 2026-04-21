@@ -1,6 +1,6 @@
 <?php
-include 'header.php';
-include 'db.php';
+require_once __DIR__ . '/header.php';
+require_once __DIR__ . '/db.php';
 
 function h($v): string {
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
