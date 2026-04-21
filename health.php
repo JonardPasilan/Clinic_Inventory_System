@@ -503,8 +503,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 8: PHYSICAL SCREENING -->
-        <div class="wizard-page" data-step="8">
-            <div class="section-title">II. PHYSICAL SCREENING</div>
+        <div class="wizard-page" data-step="3">
+            <div class="section-title">III. PERSONAL/SOCIAL HISTORY</div>
             
             <div class="form-row">
                 <div class="field">
@@ -674,8 +674,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 9: ANCILLARY EXAMINATIONS -->
-        <div class="wizard-page" data-step="9">
-            <div class="section-title">IV. ANCILLARY EXAMINATIONS</div>
+        <div class="wizard-page" data-step="5">
+            <div class="section-title">V. HOSPITAL ADMISSIONS</div>
             
             <?php
             $ancillary = is_array($profile) ? ($profile['ancillary'] ?? []) : [];
@@ -759,8 +759,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 10: EMPLOYEE CLASSIFICATION -->
-        <div class="wizard-page" data-step="10">
-            <div class="section-title">V. EMPLOYEE CLASSIFICATION</div>
+        <div class="wizard-page" data-step="6">
+            <div class="section-title">VI. MAINTENANCE MEDICATION AND OB/GYNE</div>
             
             <?php
             $classification = is_array($profile) ? ($profile['classification'] ?? []) : [];
@@ -816,8 +816,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 11: REMARKS -->
-        <div class="wizard-page" data-step="11">
-            <div class="section-title">VI. REMARKS</div>
+        <div class="wizard-page" data-step="7">
+            <div class="section-title">VII. HEAD TO TOE ASSESSMENT</div>
             
             <?php
             $remarks = is_array($profile) ? ($profile['remarks'] ?? []) : [];
@@ -852,8 +852,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 3: PERSONAL/SOCIAL HISTORY -->
-        <div class="wizard-page" data-step="3">
-            <div class="section-title">III. PERSONAL/SOCIAL HISTORY</div>
+        <div class="wizard-page" data-step="8">
+            <div class="section-title">VIII. PHYSICAL SCREENING</div>
             
             <div class="form-row">
                 <div class="field">
@@ -975,8 +975,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 5: HOSPITAL ADMISSION / PAST SURGICAL HISTORY / DISABILITY -->
-        <div class="wizard-page" data-step="5">
-            <div class="section-title">V. HOSPITAL ADMISSIONS</div>
+        <div class="wizard-page" data-step="9">
+            <div class="section-title">IV. ANCILLARY EXAMINATIONS</div>
             <div class="form-row">
                 <div class="field">
                     <label>Diagnosis</label>
@@ -1176,8 +1176,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 6: MAINTENANCE MEDICATION AND OB/GYNE -->
-        <div class="wizard-page" data-step="6">
-            <div class="section-title">VI. MAINTENANCE MEDICATION AND OB/GYNE</div>
+        <div class="wizard-page" data-step="10">
+            <div class="section-title">V. EMPLOYEE CLASSIFICATION</div>
             
             <div class="form-row">
                 <div class="field" style="grid-column:1 / -1;">
@@ -1364,8 +1364,8 @@ $isAdd = $mode === 'add';
         </div>
 
         <!-- STEP 7: HEAD TO TOE ASSESSMENT -->
-        <div class="wizard-page" data-step="7">
-            <div class="section-title">VII. HEAD TO TOE ASSESSMENT</div>
+        <div class="wizard-page" data-step="11">
+            <div class="section-title">VI. REMARKS</div>
             
             <h6 style="font-weight:bold;margin-top:20px;">NEUROLOGICAL ASSESSMENT:</h6>
             <div class="inline-checks">
@@ -1759,7 +1759,7 @@ $isAdd = $mode === 'add';
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                 <button class="btn-secondary" type="button" id="nextBtn">Next →</button>
                 <?php if (!$isView): ?>
-                    <button class="btn-primary" type="submit" name="save" id="saveBtn" style="display:none;">Save Health Profile</button>
+                    <button class="btn-primary" type="submit" name="save">Save Health Profile</button>
                 <?php endif; ?>
                 <?php if ($isView): ?>
                     <a class="btn-outline" href="employees.php">Close</a>
@@ -1777,7 +1777,6 @@ $isAdd = $mode === 'add';
         const pills = Array.from(document.querySelectorAll('.wizard-pill[data-step-ind]'));
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const saveBtn = document.getElementById('saveBtn');
 
         let pageIndex = 0;
         function showPageByIndex(idx) {
@@ -1789,13 +1788,7 @@ $isAdd = $mode === 'add';
                 pi.classList.toggle('active', n === stepNum);
             });
             prevBtn.style.visibility = pageIndex === 0 ? 'hidden' : 'visible';
-            if (pageIndex === pages.length - 1) {
-                nextBtn.style.display = 'none';
-                if (saveBtn) saveBtn.style.display = 'inline-block';
-            } else {
-                nextBtn.style.display = 'inline-block';
-                if (saveBtn) saveBtn.style.display = 'none';
-            }
+            nextBtn.style.display = pageIndex === pages.length - 1 ? 'none' : 'inline-block';
         }
 
         prevBtn.addEventListener('click', function () {

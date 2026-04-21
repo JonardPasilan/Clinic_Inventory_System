@@ -131,26 +131,69 @@ if ($search !== '') {
             margin-bottom:12px;
         }
         .search-wrap {
-            flex: 1;
-            min-width: 280px;
+            flex:0 1 340px;
+            max-width:340px;
+            min-width:0;
             display:flex;
-            gap:10px;
+            gap:8px;
+            align-items:center;
         }
         .search-wrap input {
             flex:1;
-            padding:10px 14px;
+            min-width:0;
+            padding:8px 10px;
             border:1px solid #e5e7eb;
             border-radius:10px;
             outline:none;
+            font-size:13px;
         }
         .search-wrap button {
-            padding:10px 16px;
+            padding:8px 12px;
             border:none;
             border-radius:10px;
             background:#1f4f87;
             color:#fff;
             font-weight:900;
+            font-size:12px;
             cursor:pointer;
+            flex-shrink:0;
+        }
+        .toolbar-actions {
+            display:flex;
+            gap:8px;
+            align-items:center;
+            flex-shrink:0;
+        }
+        .toolbar-import-scan {
+            padding:8px 14px;
+            border:none;
+            border-radius:10px;
+            background:#f39c12;
+            color:#fff;
+            font-weight:900;
+            font-size:12px;
+            cursor:pointer;
+            white-space:nowrap;
+        }
+        .toolbar-import-scan:hover {
+            filter:brightness(1.05);
+        }
+        .toolbar-export-btn {
+            padding:8px 14px;
+            border:none;
+            border-radius:10px;
+            background:#16a085;
+            color:#fff;
+            font-weight:900;
+            font-size:12px;
+            cursor:pointer;
+            white-space:nowrap;
+            text-decoration:none;
+            display:inline-block;
+            box-sizing:border-box;
+        }
+        .toolbar-export-btn:hover {
+            filter:brightness(1.05);
         }
 
         .table-wrap {
@@ -230,6 +273,85 @@ if ($search !== '') {
         #deleteModal .delete-modal-actions button {
             min-width:100px;
         }
+
+        #importScanModal {
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:20000;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.5);
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+            box-sizing:border-box;
+        }
+        #importScanModal.is-open {
+            display:flex;
+        }
+        #importScanModal .import-scan-modal-box {
+            position:relative;
+            z-index:1;
+            background:#fff;
+            padding:24px;
+            border-radius:12px;
+            max-width:440px;
+            width:100%;
+            box-shadow:0 20px 50px rgba(0,0,0,0.25);
+            text-align:left;
+        }
+        #importScanModal .import-scan-modal-box h3 {
+            margin:0 0 18px 0;
+            color:#1f2d3d;
+            font-size:18px;
+            text-align:center;
+        }
+        #importScanModal .import-scan-field {
+            margin-bottom:16px;
+        }
+        #importScanModal .import-scan-field label {
+            display:block;
+            font-size:13px;
+            font-weight:900;
+            color:#34495e;
+            margin-bottom:6px;
+        }
+        #importScanModal .import-scan-field select,
+        #importScanModal .import-scan-field input[type="file"] {
+            width:100%;
+            padding:10px 12px;
+            border:1px solid #e3e6ea;
+            border-radius:8px;
+            font-size:14px;
+            box-sizing:border-box;
+            background:#fff;
+        }
+        #importScanModal .import-scan-actions {
+            display:flex;
+            gap:12px;
+            justify-content:flex-end;
+            flex-wrap:wrap;
+            margin-top:22px;
+        }
+        #importScanModal .import-scan-actions button {
+            min-width:100px;
+            padding:10px 16px;
+            border-radius:10px;
+            font-weight:900;
+            font-size:13px;
+            cursor:pointer;
+            border:none;
+        }
+        #importScanModal .import-scan-actions .btn-upload-scan {
+            background:#1f4f87;
+            color:#fff;
+        }
+        #importScanModal .import-scan-actions .btn-cancel-scan {
+            background:#f3f4f6;
+            color:#1f2d3d;
+            border:1px solid #e5e7eb;
+        }
         tbody td {
             padding:12px;
             border-bottom:1px solid #eef2f7;
@@ -256,6 +378,7 @@ if ($search !== '') {
         }
         .btn-edit { background:#3498db; color:#fff; }
         .btn-view { background:#10b981; color:#fff; }
+        .btn-consult { background:#9b59b6; color:#fff; }
         .btn-del { background:#e74c3c; color:#fff; }
 
         .pagination {
@@ -322,12 +445,16 @@ if ($search !== '') {
 
     <div class="controls">
         <form method="GET" class="search-wrap">
-            <input type="text" name="search" placeholder="Search by name, id, department..." value="<?php echo h($search); ?>">
+            <input type="text" name="search" placeholder="Search name, dept..." value="<?php echo h($search); ?>">
             <button type="submit">Search</button>
             <?php if ($search !== ''): ?>
-                <a class="page-link" href="employees.php" style="margin-left:6px;">Clear</a>
+                <a class="page-link" href="employees.php" style="margin-left:2px;flex-shrink:0;">Clear</a>
             <?php endif; ?>
         </form>
+        <div class="toolbar-actions">
+            <button type="button" class="toolbar-import-scan" onclick="openImportScanModal()">Import Scan</button>
+            <a class="toolbar-export-btn" href="#">Export</a>
+        </div>
     </div>
 
     <div class="table-wrap">
@@ -415,6 +542,7 @@ if ($search !== '') {
                         echo '<div class="actions">';
                         echo '<a class="btn-action btn-edit" href="health.php?id=' . $eid . '&mode=edit">Edit</a>';
                         echo '<a class="btn-action btn-view" href="health.php?id=' . $eid . '&mode=view">View</a>';
+                        echo '<a class="btn-action btn-consult" href="consultation.php?id=' . $eid . '&mode=add">Consult</a>';
                         echo '<button class="btn-action btn-del" type="button" onclick="confirmDelete(' . $eid . ')">Delete</button>';
                         echo '</div>';
                         echo '</td>';
@@ -461,6 +589,31 @@ if ($search !== '') {
     </div>
 </div>
 
+<!-- Import scanned data -->
+<div id="importScanModal" role="dialog" aria-modal="true" aria-labelledby="importScanModalTitle" onclick="if(event.target===this) closeImportScanModal();">
+    <div class="import-scan-modal-box" onclick="event.stopPropagation();">
+        <h3 id="importScanModalTitle">Import Scanned Data</h3>
+        <form id="importScanForm">
+            <input type="hidden" name="employee_id" id="importScanEmployeeId" value="">
+            <div class="import-scan-field">
+                <label for="importScanType">Import Type</label>
+                <select name="import_type" id="importScanType">
+                    <option value="consultation">Consultation Form</option>
+                    <option value="health_profile">NBSC Employee Health Profile Form</option>
+                </select>
+            </div>
+            <div class="import-scan-field">
+                <label for="importScanFile">File (image or PDF)</label>
+                <input type="file" name="scan_file" id="importScanFile" accept="image/*,.pdf,application/pdf">
+            </div>
+            <div class="import-scan-actions">
+                <button type="button" class="btn-cancel-scan" onclick="closeImportScanModal()">Cancel</button>
+                <button type="button" class="btn-upload-scan" id="importScanSubmitBtn" onclick="submitImportScan()">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 let deleteId = 0;
 
@@ -476,5 +629,44 @@ function closeModal(){
 function deleteNow(){
     document.getElementById("deleteId").value = deleteId;
     document.getElementById("deleteForm").submit();
+}
+
+function openImportScanModal(employeeId){
+    document.getElementById("importScanEmployeeId").value = employeeId != null ? String(employeeId) : "";
+    document.getElementById("importScanModal").classList.add("is-open");
+}
+
+function closeImportScanModal(){
+    document.getElementById("importScanModal").classList.remove("is-open");
+    document.getElementById("importScanForm").reset();
+}
+
+async function submitImportScan(){
+    const fileInput = document.getElementById("importScanFile");
+    if (!fileInput.files || !fileInput.files.length) {
+        alert("Please choose an image or PDF file.");
+        return;
+    }
+    const btn = document.getElementById("importScanSubmitBtn");
+    const fd = new FormData(document.getElementById("importScanForm"));
+    btn.disabled = true;
+    try {
+        const res = await fetch("process_scan.php", { method: "POST", body: fd });
+        const data = await res.json().catch(function(){ return null; });
+        if (!data) {
+            alert("Upload failed. Please try again.");
+            return;
+        }
+        if (data.success) {
+            closeImportScanModal();
+            alert("File uploaded successfully.");
+        } else {
+            alert(data.error || "Upload failed.");
+        }
+    } catch (e) {
+        alert("Upload failed. Please try again.");
+    } finally {
+        btn.disabled = false;
+    }
 }
 </script>
